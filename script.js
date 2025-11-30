@@ -10,8 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // get input value and remove whitespaces using the trim method
     const taskText = taskInput.value.trim();
 
-    console.log(taskText);
-
     // taskText === ""
     if (taskText === "") alert("Kindly add a task for today.");
 

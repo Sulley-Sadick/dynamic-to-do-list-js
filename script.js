@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const taskInput = document.getElementById("task-input");
   const taskList = document.getElementById("task-list");
 
-  //   loadTask function to get task from localStorage when page reloads
-  const loadTask = function () {
+  //   loadTasks function to get task from localStorage when page reloads
+  const loadTasks = function () {
     // if tasks exist in the localStorage, store it in the storedTasks variable
     const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 
@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
     storedTasks.forEach((taskText) => addTask(taskText, false));
   };
 
-  //   call loadTask function
-  loadTask();
+  //   call loadTasks function
+  loadTasks();
 
   //   addTask function
   const addTask = function (taskText, save = true) {

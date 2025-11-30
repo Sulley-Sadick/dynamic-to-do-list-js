@@ -5,8 +5,32 @@ document.addEventListener("DOMContentLoaded", function () {
   const taskInput = document.getElementById("task-input");
   const taskList = document.getElementById("task-list");
 
+  //   loadTask function to get task from localStorage when page reloads
+  const loadTask = function () {
+    // if tasks exist in the localStorage, store it in the storedTasks variable
+    const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    // loop over storedTasks and call addTask function and pass in taskText at each iteration and set save = false
+    storedTasks.forEach((taskText) => addTask(taskText, false));
+  };
+
+  //   call loadTask function
+  loadTask();
+
   //   addTask function
-  const addTask = function () {
+  const addTask = function (taskText, save = true) {
+    // if save = true
+    if (save) {
+      // get tasks and convert it to object by using the JSON.parse method else set it up to empty object
+      const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+      // push taskText to storedTask array
+      storedTasks.push(taskText);
+
+      // store the storedTasks in the localStorage
+      localStorage.setItem("tasks", JSON.stringify(storedTasks));
+    }
+
     // get input value and remove whitespaces using the trim method
     const taskText = taskInput.value.trim();
 

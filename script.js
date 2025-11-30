@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
   addButton.addEventListener("click", addTask);
 
   //   listen for keypress event on the window object
-  window.addEventListener("keypress", function (event) {
+  taskInput.addEventListener("keypress", function (event) {
     // event.key === enter
     // event.key === "Enter" ? addTask() : ""; // alternative approach using ternary operator
 

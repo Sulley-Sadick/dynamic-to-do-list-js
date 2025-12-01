@@ -5,71 +5,94 @@ document.addEventListener("DOMContentLoaded", function () {
   const taskInput = document.getElementById("task-input");
   const taskList = document.getElementById("task-list");
 
-  //   loadTasks function to get task from localStorage when page reloads
-  const loadTasks = function () {
-    // if tasks exist in the localStorage, store it in the storedTasks variable
-    const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+  let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 
-    // loop over storedTasks and call addTask function and pass in taskText at each iteration and set save = false
-    storedTasks.forEach((taskText) => addTask(taskText, false));
+  //   loadTasks function to get task from localStorage when page loads
+  const loadTasks = function (task) {
+    // create li element
+    const li = document.createElement("li");
+
+    // set the data attributes of li = task
+    li.dataset.task = task;
+
+    // create a span element
+    const span = document.createElement("span");
+
+    // set the textContent of span = task
+    span.textContent = task;
+
+    // create removeButtton
+    const removeButton = document.createElement("button");
+
+    // set it textContent to remove
+    removeButton.textContent = "Remove";
+
+    // add the class of remove-btn
+    removeButton.classList.add("remove-btn");
+
+    // append both span and removeButton to li element
+    li.append(span, removeButton);
+
+    // append li to taskList
+    taskList.appendChild(li);
   };
 
-  //   call loadTasks function
-  loadTasks();
+  //   loop over tasks and call loadTasks at each iteration
+  tasks.forEach(loadTasks);
 
   //   addTask function
-  const addTask = function (taskText, save = true) {
-    // if save = true
-    if (save) {
-      // get tasks and convert it to object by using the JSON.parse method else set it up to empty object
-      const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-
-      // push taskText to storedTask array
-      storedTasks.push(taskText);
-
-      // store the storedTasks in the localStorage
-      localStorage.setItem("tasks", JSON.stringify(storedTasks));
-    }
-
-    // get input value and remove whitespaces using the trim method
+  function addTask() {
+    // take value from taskInput.value and store it in taskText variable
     const taskText = taskInput.value.trim();
 
     // taskText === ""
-    if (taskText === "") alert("Kindly add a task for today.");
+    if (taskText === "") return alert("Kindly add a task for today.");
 
     // taskText holds value
     if (taskText) {
-      // 1. create an li element
+      //  create an li element
       const li = document.createElement("li");
 
-      //   2.  set it's textContent = taskText
+      //   set it's textContent = taskText
       li.textContent = taskText;
 
-      //   create new button
-      const removeButton = document.createElement("button");
+      //   push taskText to tasks
+      tasks.push(taskText);
 
-      //   set textContent = Remove
-      removeButton.textContent = "Remove";
+      // store tasks in the localStorage and give it key of tasks
+      localStorage.setItem("tasks", JSON.stringify(tasks));
 
-      //   set className = remove-btn
-      removeButton.classList.add("remove-btn");
-
-      //   add onclick event to the removeButton
-      removeButton.addEventListener("click", function () {
-        // remove li element from taskList
-        taskList.removeChild(li);
-      });
-
-      //   append removeButton  = li
-      li.appendChild(removeButton);
-
-      //   append li  = taskList
-      taskList.appendChild(li);
+      //   call loadTask function and pass in taskText as an argument
+      loadTasks(taskText);
 
       //   clear input values
       taskInput.value = "";
     }
-  };
+  }
+
+  //   Add click event to taskList
+  taskList.addEventListener("click", function (e) {
+    // e.target.classList does not contain remove-btn
+    if (!e.target.classList.contains("remove-btn")) return;
+
+    // e.target.classList.contains remove-btn store it in li variable
+    const li = e.target.closest("li");
+
+    // store element that has the task as a value to dataset attributes
+    const task = li?.dataset.task;
+
+    // li element does not have the dataset attributes of task, return
+    if (!task) return;
+
+    // take element that is not the same as task and assign it tasks variable
+    tasks = tasks.filter((t) => t !== task);
+
+    //  store task in localStorage
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    // remove li element
+    li.remove();
+  });
 
   // add click event to addButton  and pass in addTask function as a callback function
   addButton.addEventListener("click", addTask);
